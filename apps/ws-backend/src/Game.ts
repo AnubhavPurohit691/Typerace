@@ -1,5 +1,6 @@
 import { WebSocket, WebSocketServer } from "ws"
 import { generateParagraph } from "./generateparagraph";
+import { rooms } from "./setuplisteners";
 
 interface Player{
 id:string,
@@ -44,9 +45,21 @@ export class Game{
                     this.bodcast({type:"game-finished"})
                     this.bodcast({type:"players",players:this.players})
                 }, 60000);
+
+            }
+            if(parseddata.type=="player-typing"){
+                if(this.gameStatus!=="in-progress"){
+                    return
+                }
+                this.updateScore(playerid,parseddata.typed)
             }
         })
+
+        ws.on("close", () => {
+            this.removePlayer(playerid);
+        });
     }
+
     JoinGame(id:string,name:string,ws:WebSocket){
         if(this.gameStatus=="in-progress"){
             return 
@@ -58,6 +71,38 @@ export class Game{
         this.maingamelogic(ws,id)
 
     }
+
+    updateScore(playerId:string,typed:string){
+        const typedwords=typed.split(" ")
+        const paragraphWords = this.paragraph.split(" ")
+        let score=0;
+        for(let i=0;i<typedwords.length;i++){
+            if(typedwords[i]===paragraphWords[i]){
+                score++;
+            }
+            else{
+                break;
+            }
+        }
+        const player=this.players.find((p)=>p.id ===playerId)
+        if(player) player.score=score
+        this.bodcast({type:"player-score",id:playerId,score})
+    }
+
+    removePlayer(playerId:string){
+        this.players=this.players.filter(p=>p.id!==playerId)
+        this.bodcast({type:"player-leave",id:playerId})
+        if(this.gameHost===playerId && this.players.length>0){
+            this.gameHost=this.players[0]!.id
+            this.bodcast({type:"new-host", host:this.gameHost})
+        }
+        if(this.players.length===0){
+           rooms.delete(this.gameId) 
+        }
+        
+    }
+
+
     bodcast(data:any){
         this.players.forEach((players)=>{
             players.ws.send(JSON.stringify(data))
