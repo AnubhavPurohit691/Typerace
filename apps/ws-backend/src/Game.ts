@@ -23,6 +23,9 @@ export class Game{
         this.gameStatus = "not-started";
         this.paragraph = "";
     }
+
+
+    
     maingamelogic(ws:WebSocket,playerid:string){
         ws.on("message",(data:string)=>{
             const parseddata=JSON.parse(data)
@@ -66,7 +69,7 @@ export class Game{
         }
         this.players.push({id:id,name:name,score:0,ws:ws})
         this.bodcast({type:"player-joined",id:id,name:name,score:0})
-        ws.send(JSON.stringify({ type: "player", players: this.players }));
+        ws.send(JSON.stringify({ type: "players", players: this.players }));
         ws.send(JSON.stringify({ type: "new-host", host: this.gameHost }));
         this.maingamelogic(ws,id)
 
