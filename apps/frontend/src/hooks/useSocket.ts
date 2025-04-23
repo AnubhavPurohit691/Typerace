@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import  { useEffect, useState, useCallback } from 'react'
 
 const useSocket = () => {
     const [socket, setSocket] = useState<WebSocket>()
-    const [isConnected, setIsConnected] = useState(false)
+    const [, setIsConnected] = useState(false)
 
     const connect = useCallback(() => {
         const ws = new WebSocket("ws://localhost:8080")
