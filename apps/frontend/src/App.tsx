@@ -5,7 +5,7 @@ import Gamepage from './Page/Gamepage'
 
 const App = () => {
   return (
-    <div>
+    <div className='min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white'>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Createroom/>}/>
