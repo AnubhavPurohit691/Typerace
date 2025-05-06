@@ -17,8 +17,6 @@ const useSocket = () => {
       console.log("WebSocket disconnected");
       setSocket(undefined);
       setIsConnected(false);
-      // Attempt to reconnect after 3 seconds
-      setTimeout(connect, 3000);
     };
 
     ws.onerror = (error) => {
