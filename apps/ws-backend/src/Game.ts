@@ -11,6 +11,7 @@ interface Player {
 
 export class Game {
   gameStatus: "not-started" | "in-progress" | "finished" = "not-started";
+  
   gameId: string;
   players: Player[] = [];
   gameHost: string;
