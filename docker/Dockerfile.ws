@@ -1,13 +1,20 @@
 FROM node:20-alpine
 
 WORKDIR /app
-COPY package.json package-lock.json ./
 
-COPY ./apps/ws-backend ./apps/ws-backend
+COPY package.json pnpm-lock.yaml turbo.json ./
+
+COPY ./apps/ws-backend/package.json ./apps/ws-backend/package.json
+
+COPY . .
 
 RUN npm install -g pnpm
-RUN pnpm install
-RUN pnpm build
+
+RUN pnpm install 
+
+RUN pnpm build:ws
+
+WORKDIR /app/apps/ws-backend
 
 EXPOSE 8080
 
