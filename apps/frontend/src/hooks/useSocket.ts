@@ -5,7 +5,7 @@ const useSocket = () => {
   const [, setIsConnected] = useState(false);
 
   const connect = useCallback(() => {
-    const ws = new WebSocket("ws://localhost:8080");
+    const ws = new WebSocket("ws://13.126.147.107:8080");
 
     ws.onopen = () => {
       console.log("WebSocket connected");
